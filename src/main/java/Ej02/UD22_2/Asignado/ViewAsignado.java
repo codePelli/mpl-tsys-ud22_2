@@ -16,6 +16,8 @@ import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 
+import Ej02.UD22_2.Cientifico.ControllerCientifico;
+import Ej02.UD22_2.Cientifico.ViewUpdateCientifico;
 import Ej02.UD22_2.Connection.ConnectionSQL;
 import Ej02.UD22_2.Connection.ViewConnect;
 
@@ -26,7 +28,10 @@ public class ViewAsignado extends JFrame {
 	
     private JPanel panel;
 	private JButton btnDelete;
+	private JButton btnUpdate;
 	
+	ViewAsignado viewAsignado;
+	ViewUpdateAsignado viewUpdateAsignado;
 	ViewInsertAsignado viewInsertAsignado;
     ConnectionSQL connect;
     ControllerAsignado controllerAsignado;
@@ -105,13 +110,31 @@ public class ViewAsignado extends JFrame {
 
             for (Asignado asignado : asign) {
             	
-                JLabel lblAsignacion = new JLabel("Cientifico " + asignado.getCientifico() + "asignado a proyecto: " + asignado.getProyecto());
+                JLabel lblAsignacion = new JLabel("Cientifico " + asignado.getCientifico() + " asignado a proyecto " + asignado.getProyecto());
                 panel.add(lblAsignacion);
                 lblAsignacion.setBounds(10, y, 500, 30);
+                
+                //BUTTON UPDATE FOR EACH ASIGNACION
+        		btnUpdate = new JButton("UPDATE");
+        		btnUpdate.setBounds(550, yy, 80, 23);
+        		btnUpdate.setBackground(Color.YELLOW);
+                btnUpdate.setName("btnUpd" + asignado.getCientifico());
+        		btnUpdate.addActionListener(new ActionListener() {
+        			@Override
+					public void actionPerformed(ActionEvent e) {
+        				
+        				String cientifico = asignado.getCientifico();
+        				String proyecto = asignado.getProyecto();
+        				
+        				ViewUpdateAsignado viewUpdateAsignado = new ViewUpdateAsignado(cientifico, proyecto, controllerAsignado, connect, viewAsignado);
+        				viewUpdateAsignado.setVisible(true);
+        			}
+        		});
+        		panel.add(btnUpdate);
 
                 //BUTTON DELETE FOR EACH ASIGNACION
                 btnDelete = new JButton("DELETE");
-                btnDelete.setBounds(550, yy, 80, 23);
+                btnDelete.setBounds(635, yy, 80, 23);
                 btnDelete.setBackground(Color.RED);
                 btnDelete.setName("btnDel" + asignado.getCientifico() + asignado.getProyecto());
                 btnDelete.addActionListener(new ActionListener() {
