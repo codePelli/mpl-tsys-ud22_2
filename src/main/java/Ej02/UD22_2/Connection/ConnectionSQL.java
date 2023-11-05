@@ -9,11 +9,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
+import Ej02.UD22_2.Asignado.Asignado;
 import Ej02.UD22_2.Cientifico.Cientifico;
 import Ej02.UD22_2.Proyecto.Proyecto;
-import Ejercicios.UD22.Controller.ControllerConnect;
-import Ejercicios.UD22.Model.Cliente;
-import Ejercicios.UD22.Model.Video;
 
 import java.sql.Statement;
 import java.sql.*;
@@ -213,5 +211,32 @@ public class ConnectionSQL {
     	}
     	
 		return cie;
+    }
+
+    public List<Asignado> getAsignado() {
+    	
+        List<Asignado> asi = new ArrayList<>();
+
+        try {
+        	
+            String query = "SELECT * FROM asignado";
+            Statement st = connection.createStatement();
+            ResultSet rs = st.executeQuery(query);
+
+            while (rs.next()) {
+            	
+                String cientifico = rs.getString("cientifico");
+                String proyecto = rs.getString("proyecto");
+
+                Asignado asignado = new Asignado(cientifico, proyecto);
+                asi.add(asignado);
+            }
+
+        } catch (SQLException e) {
+        	
+            System.out.println(e.getMessage());
+        }
+
+        return asi;
     }
 }

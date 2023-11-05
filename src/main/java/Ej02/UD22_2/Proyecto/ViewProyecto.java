@@ -14,26 +14,29 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
-
-import Ej02.UD22_2.Cientifico.Cliente;
-import Ej02.UD22_2.Cientifico.ControllerCliente;
-import Ej02.UD22_2.Cientifico.ViewCliente;
-import Ej02.UD22_2.Cientifico.ViewConnect;
-import Ej02.UD22_2.Cientifico.ViewInsertCliente;
-import Ej02.UD22_2.Cientifico.ViewUpdateCliente;
+import Ej02.UD22_2.Connection.ConnectionSQL;
+import Ej02.UD22_2.Connection.ViewConnect;
 
 public class ViewProyecto extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
+	private JButton btnDelete;
+	private JButton btnUpdate;
+	JPanel panel;
+	
+	ConnectionSQL connect;
+	ControllerProyecto controllerProyecto;
+	ViewInsertProyecto viewInsertProyecto;
+	ViewProyecto viewProyecto;
 
 	/**
 	 * Create the frame.
 	 */
-	public ViewProyecto() {
+	public ViewProyecto(ConnectionSQL connect) {
 		
-		this.connection = connection;
-		this.controllerCliente = new ControllerCliente(connection);
+		this.connect = connect;
+		this.controllerProyecto = new ControllerProyecto(connect);
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 766, 470);
@@ -77,18 +80,18 @@ public class ViewProyecto extends JFrame {
 		btnInsert.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-		        viewInsert = new ViewInsertCliente(controllerCliente, ViewCliente.this);
-				viewInsert.setVisible(true);
+				viewInsertProyecto = new ViewInsertProyecto(controllerProyecto, ViewProyecto.this);
+				viewInsertProyecto.setVisible(true);
 			}
 		});
 	}
 	
-	//FUNCTION TO SHOW CLIENTES ON MAIN WINDOW
-	public void showCliente(List<Cliente> cli) {
+	//FUNCTION TO SHOW PROYECTOS ON MAIN WINDOW
+	public void showProyecto(List<Proyecto> pro) {
 
-        if(cli.isEmpty()) {
+        if(pro.isEmpty()) {
         	
-        	JOptionPane.showMessageDialog(contentPane, "No CLIENTE to show");
+        	JOptionPane.showMessageDialog(contentPane, "No PROYECTO to show");
         	
         } else {
         	
@@ -98,28 +101,27 @@ public class ViewProyecto extends JFrame {
         	int y = 8;
         	int yy = 10;
         	
-        	for (Cliente cliente : cli) {
+        	for (Proyecto proyecto : pro) {
         		
-                JLabel lblCliente = new JLabel("ID: " + cliente.getId() + ", nombre: " + cliente.getNombre()
-                		+ ", apellido: " + cliente.getApellido() + ", direccion: " + cliente.getDireccion()
-                		+ ", dni: " + cliente.getDni() + ", fecha: " + cliente.getFecha());
+                JLabel lblProyecto = new JLabel("ID: " + proyecto.getId() + ", nombre: " + proyecto.getNombre()
+                		+ ", horas: " + proyecto.getHoras());
                 
-                panel.add(lblCliente);
-                lblCliente.setBounds(10, y, 500, 30);
+                panel.add(lblProyecto);
+                lblProyecto.setBounds(10, y, 500, 30);
                 
-                //BUTTON UPDATE FOR EACH CLIENTE
+                //BUTTON UPDATE FOR EACH PROYECTO
         		btnUpdate = new JButton("UPDATE");
         		btnUpdate.setBounds(550, yy, 80, 23);
         		btnUpdate.setBackground(Color.YELLOW);
-                btnUpdate.setName("btnUpd" + cliente.getId());
+                btnUpdate.setName("btnUpd" + proyecto.getId());
         		btnUpdate.addActionListener(new ActionListener() {
         			public void actionPerformed(ActionEvent e) {
         				
-        				int clienteId = cliente.getId();
-        				ControllerCliente controllerCliente = new ControllerCliente(connection);
+        				String proyectoId = proyecto.getId();
+        				ControllerProyecto controllerProyecto = new ControllerProyecto(connect);
         				
-        				ViewUpdateCliente viewUpdate = new ViewUpdateCliente(clienteId, controllerCliente, connection, viewCliente);
-        				viewUpdate.setVisible(true);
+        				ViewUpdateProyecto viewUpdateProyecto = new ViewUpdateProyecto(proyectoId, controllerProyecto, connect, viewProyecto);
+        				viewUpdateProyecto.setVisible(true);
         			}
         		});
         		
@@ -129,7 +131,7 @@ public class ViewProyecto extends JFrame {
         		btnDelete = new JButton("DELETE");
         		btnDelete.setBounds(635, yy, 80, 23);
         		btnDelete.setBackground(Color.RED);
-                btnDelete.setName("btnDel" + cliente.getId());
+                btnDelete.setName("btnDel" + proyecto.getId());
         		btnDelete.addActionListener(new ActionListener() {
         			public void actionPerformed(ActionEvent e) {
         				        				
@@ -138,10 +140,10 @@ public class ViewProyecto extends JFrame {
         				
         				if (del == JOptionPane.YES_OPTION) {
         					
-    						int clienteId = cliente.getId();						
-    						controllerCliente.deleteCliente(clienteId);
+    						String proyectoId = proyecto.getId();						
+    						controllerProyecto.deleteProyecto(proyectoId);
     						
-    				        panel.remove(lblCliente);
+    				        panel.remove(lblProyecto);
                             panel.remove(btnDelete);
                             panel.revalidate();
                             panel.repaint();
